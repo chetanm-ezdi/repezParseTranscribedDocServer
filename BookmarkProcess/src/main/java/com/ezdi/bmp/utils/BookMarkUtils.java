@@ -9,9 +9,9 @@ import java.util.Map;
 public class BookMarkUtils
 {
 	/* get files from input folder */
-	public static Map<String, String>	bookmarkMap	= new LinkedHashMap<String, String>();
+	public static Map<String, String>	consideredBookmarkMap	= new LinkedHashMap<String, String>();
 
-	public static void getConsideredBookmarkMap()
+	public static void getBookmarkMapping()
 	{
 		String line;
 		try
@@ -25,7 +25,7 @@ public class BookMarkUtils
 				String bookmarkArray[] = columns[0].split("/");
 				for (String bookmark : bookmarkArray)
 				{
-					bookmarkMap.put(bookmark.trim(), columns[1].trim());
+					consideredBookmarkMap.put(bookmark.trim(), columns[1].trim());
 				}
 
 			}

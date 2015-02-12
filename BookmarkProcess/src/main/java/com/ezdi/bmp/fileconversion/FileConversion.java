@@ -7,19 +7,18 @@ import com.ezdi.bmp.utils.Constant;
 
 public class FileConversion
 {
-	public static File convertIntoDoc(File inputFile)
+	public static File		docFile;
+	private static File		inputFile;
+	private static String	docFileName;
+	private static String	fileExtension;
+
+	public void convertIntoDoc(String inputFileName, String dirPath)
 	{
 		// TODO Auto-generated method stub
-		String fileExtension;
-		String docFileName;
-		String inputFileName;
-		File docFile;
-
-		inputFileName = inputFile.getName();
+		inputFile = new File(Constant.ROOT + dirPath + "/" + inputFileName);
 		fileExtension = inputFileName.substring(inputFileName.lastIndexOf(".") + 1, inputFileName.length());
 		docFileName = inputFileName.replace(fileExtension, Constant.DOC_FILE_EXTENSION);
-		docFile = new File(Constant.DOC_FILES_FOLDER + "/" + docFileName);
+		docFile = new File(Constant.ROOT + "/" + Constant.DOC_FILES_FOLDER_NAME + "/" + docFileName);
 		OpenOfficeSetup.getConverter().convert(inputFile, docFile);
-		return docFile;
 	}
 }

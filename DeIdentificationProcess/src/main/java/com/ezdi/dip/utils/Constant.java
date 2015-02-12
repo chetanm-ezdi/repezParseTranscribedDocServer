@@ -44,5 +44,5 @@ public class Constant
 	 */
 
 	public static final String	HOSPITAL_ID				= "text_files_folder";
-	public static final String	REPLACECHAR				= "$";
+	public static final String	REPLACECHAR				= "#";
 }

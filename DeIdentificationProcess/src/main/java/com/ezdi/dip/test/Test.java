@@ -19,19 +19,16 @@ public class Test
 	{
 		// TODO Auto-generated method stub
 		Test test = new Test();
-		test.init();
+		test.initialize();
 		test.communication();
 		test.release();
 	}
 
-	private void init() throws IOException
+	private void initialize() throws IOException
 	{
 		// TODO Auto-generated method stub
-		//OpenOfficeSetup.startConnection();
 		ProducerConumerSetup.rabbitmqQueueSetup();
-		ProducerConumerSetup.declareQueue(Constant.DEIDENTIFICATION_QUEUE);
 		ProducerConumerSetup.startConsuming(Constant.DEIDENTIFICATION_QUEUE);
-
 	}
 
 	private void communication() throws Exception
@@ -45,16 +42,12 @@ public class Test
 			fileName = msg.getFileName();
 			tenantCode = msg.getTenantCode();
 			fileUtilObj.fileProcess(fileName, tenantCode);
-
-			//  File textFile=FileConversion.convertIntoText(fileName,tenantCode);
-			// msgProcessObj.sendMessage(textFile);
 		}
 	}
 
 	private void release() throws IOException
 	{
 		// TODO Auto-generated method stub
-		//OpenOfficeSetup.closeConnection();
 		ProducerConumerSetup.shutDownProcess();
 	}
 

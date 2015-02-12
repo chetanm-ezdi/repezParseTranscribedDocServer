@@ -16,27 +16,29 @@ public class FileUtils
 
 	private static BookmarkProcess	bookmarkProcessObj;
 	private static MessageProcess	msgProcessObj;
+	private static FileConversion	fileConversionObj;
 
 	private static Message			msg;
 
 	private static String			dirPath;
 	private static String			fileName;
+	private static String			inputFolder;
+	private static File				docFile;
 
 	private static int				fileCount	= 0;
-
-	private static File				docFile;
 
 	public FileUtils() throws Exception
 	{
 		// TODO Auto-generated method stub
 		bookmarkProcessObj = new BookmarkProcess();
 		msgProcessObj = new MessageProcess();
+		fileConversionObj = new FileConversion();
 	}
 
 	public void getInputFolder() throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException
 	{
 		// TODO Auto-generated method stub
-		File dir = new File(Constant.INPUT_FILES_FOLDER);
+		File dir = new File(Constant.ROOT + "/" + Constant.INPUT_FILES_FOLDER_NAME);
 		while (true)
 		{
 			getFiles(dir);
@@ -45,7 +47,7 @@ public class FileUtils
 		//System.out.println("Complete...");
 	}
 
-	public void getFiles(File dir) throws ConnectException, ShutdownSignalException, ConsumerCancelledException, InterruptedException
+	private void getFiles(File dir) throws ConnectException, ShutdownSignalException, ConsumerCancelledException, InterruptedException
 	{
 		// TODO Auto-generated method stub
 		try
@@ -61,10 +63,12 @@ public class FileUtils
 				{
 					fileCount++;
 					//System.out.println("file converting is :" + fileCount + file.getName());
-					docFile = FileConversion.convertIntoDoc(file);
-					dirPath = findCurrentDirPathFromInputDir(dir);
+					fileName = file.getName();
+					findCurrentDirPathFromRootDir(dir);
+					fileConversionObj.convertIntoDoc(fileName, dirPath);
 					file.delete();
-					bookmarkProcessObj.getDemographicInfoFromBookmarks(docFile, dirPath);
+					docFile = FileConversion.docFile;
+					bookmarkProcessObj.getBookmarkInfo(docFile, dirPath);
 					fileName = docFile.getName();
 					msg = new Message();
 					msg.setFileName(fileName);
@@ -81,20 +85,16 @@ public class FileUtils
 
 	}
 
-	public String findCurrentDirPathFromInputDir(File dir)
+	private void findCurrentDirPathFromRootDir(File dir)
 	{
 
-		String dirPath = dir.getAbsolutePath();
-		dirPath = dirPath.substring(Constant.INPUT_FILES_FOLDER.length());
-		if (dirPath.length() > 0)
+		dirPath = dir.getAbsolutePath();
+		inputFolder = Constant.ROOT + "/" + Constant.INPUT_FILES_FOLDER_NAME;
+		dirPath = dirPath.substring(inputFolder.length());
+		if (dirPath.length() == 0)
 		{
-			return dirPath;
+			dirPath = "ROOT";
 		}
-		else
-		{
-			return "ROOT";
-		}
-
 		// TODO Auto-generated method stub
 	}
 

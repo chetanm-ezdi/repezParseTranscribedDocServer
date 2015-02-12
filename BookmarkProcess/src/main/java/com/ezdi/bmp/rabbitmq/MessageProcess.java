@@ -9,8 +9,6 @@ import com.ezdi.server.common.component.Message;
 
 public class MessageProcess
 {
-	private static String	docFileName;
-	private static Message	msg;
 
 	public void sendMessage(Message message) throws IOException
 	{
@@ -19,7 +17,7 @@ public class MessageProcess
 		ProducerConumerSetup.publishMessage(Constant.DOC_TO_TEXT_QUEUE, msgBytes);
 	}
 
-	public static byte[] getBytes(Message msg) throws IOException
+	private static byte[] getBytes(Message msg) throws IOException
 	{
 
 		byte[] bytes;

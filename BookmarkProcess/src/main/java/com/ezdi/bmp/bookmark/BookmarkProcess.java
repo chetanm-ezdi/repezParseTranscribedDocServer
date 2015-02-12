@@ -20,14 +20,14 @@ public class BookmarkProcess
 
 	private static QueryMySql			queryMySqlObj;
 
-	private static Map<String, String>	bookmarkDemographicInfoMap;
+	private static Map<String, String>	bookmarkMap;
 
 	private static String				bookmarkName;
 	private static String				bookmarkValue;
 	private static String				bookmarkNameStr;
-	private static String				tempbookmarkNamestr;
-	private static String				demogrphicInfoStr;
-	private static String				tempDemogrphicInfoStr;
+	private static String				tempBookmarkNamestr;
+	private static String				bookmarkValStr;
+	private static String				tempBookmarkValStr;
 	private static String				docFileName;
 	private static FileInputStream		fileInputStream;
 
@@ -35,26 +35,26 @@ public class BookmarkProcess
 
 	public BookmarkProcess() throws Exception
 	{
-		BookMarkUtils.getConsideredBookmarkMap();
+		BookMarkUtils.getBookmarkMapping();
 		queryMySqlObj = new QueryMySql();
 	}
 
-	public void getDemographicInfoFromBookmarks(File docFile, String dirPath) throws IOException
+	public void getBookmarkInfo(File docFile, String dirPath) throws IOException
 	{
 		// TODO Auto-generated method stub
 		docFileName = docFile.getName();
 		fileInputStream = new FileInputStream(docFile);
-		getBookmarkDemographicInfoMap(fileInputStream);
-		getBookmarkNameStr(bookmarkDemographicInfoMap);
-		getDemographicInfoStr(bookmarkDemographicInfoMap);
-		queryMySqlObj.insertEntryIntoBookmarkTable(docFileName, dirPath, bookmarkNameStr, demogrphicInfoStr);
+		getBookmarkFromFiles(fileInputStream);
+		getBookmarkNameStr(bookmarkMap);
+		getBookmarkValStr(bookmarkMap);
+		queryMySqlObj.insertEntryIntoBookmarkTable(docFileName, dirPath, bookmarkNameStr, bookmarkValStr);
 
 	}
 
-	private void getBookmarkDemographicInfoMap(FileInputStream fileInputStream) throws IOException
+	private void getBookmarkFromFiles(FileInputStream fileInputStream) throws IOException
 	{
 		// TODO Auto-generated method stub
-		bookmarkDemographicInfoMap = new LinkedHashMap<String, String>();
+		bookmarkMap = new LinkedHashMap<String, String>();
 
 		document = new HWPFDocument(fileInputStream);
 		Bookmarks bookmarks = document.getBookmarks();
@@ -64,26 +64,26 @@ public class BookmarkProcess
 			bookmark = bookmarks.getBookmark(k);
 			bookmarkName = bookmark.getName().trim();
 
-			if (BookMarkUtils.bookmarkMap.containsKey(bookmarkName))
+			if (BookMarkUtils.consideredBookmarkMap.containsKey(bookmarkName))
 			{
 				bookmarkValue = document.getText().subSequence(bookmark.getStart(), bookmark.getEnd()).toString().trim();
-				bookmarkDemographicInfoMap.put(BookMarkUtils.bookmarkMap.get(bookmarkName), bookmarkValue);
+				bookmarkMap.put(BookMarkUtils.consideredBookmarkMap.get(bookmarkName), bookmarkValue);
 			}
 		}
 
 	}
 
-	private void getBookmarkNameStr(Map<String, String> bookmarkDemographicInfoMap)
+	private void getBookmarkNameStr(Map<String, String> bookmarkMap)
 	{
 		// TODO Auto-generated method stub
 		bookmarkNameStr = "";
 
-		if (bookmarkDemographicInfoMap != null && !bookmarkDemographicInfoMap.isEmpty())
+		if (bookmarkMap != null && !bookmarkMap.isEmpty())
 		{
-			for (String bookmarkName : bookmarkDemographicInfoMap.keySet())
+			for (String bookmarkName : bookmarkMap.keySet())
 			{
-				tempbookmarkNamestr = bookmarkName + ",";
-				bookmarkNameStr = bookmarkNameStr.concat(tempbookmarkNamestr);
+				tempBookmarkNamestr = bookmarkName + ",";
+				bookmarkNameStr = bookmarkNameStr.concat(tempBookmarkNamestr);
 			}
 			ind = bookmarkNameStr.lastIndexOf(",");
 			bookmarkNameStr = bookmarkNameStr.substring(0, ind);
@@ -91,20 +91,20 @@ public class BookmarkProcess
 		}
 	}
 
-	private void getDemographicInfoStr(Map<String, String> bookmarkDemographicInfoMap)
+	private void getBookmarkValStr(Map<String, String> bookmarkMap)
 	{
 		// TODO Auto-generated method stub
-		demogrphicInfoStr = "";
+		bookmarkValStr = "";
 
-		if (bookmarkDemographicInfoMap != null && !bookmarkDemographicInfoMap.isEmpty())
+		if (bookmarkMap != null && !bookmarkMap.isEmpty())
 		{
-			for (String bookmarkFieldName : bookmarkDemographicInfoMap.keySet())
+			for (String bookmarkName : bookmarkMap.keySet())
 			{
-				tempDemogrphicInfoStr = "\"" + bookmarkDemographicInfoMap.get(bookmarkFieldName) + "\",";
-				demogrphicInfoStr = demogrphicInfoStr.concat(tempDemogrphicInfoStr);
+				tempBookmarkValStr = "\"" + bookmarkMap.get(bookmarkName) + "\",";
+				bookmarkValStr = bookmarkValStr.concat(tempBookmarkValStr);
 			}
-			ind = demogrphicInfoStr.lastIndexOf(",");
-			demogrphicInfoStr = demogrphicInfoStr.substring(0, ind);
+			ind = bookmarkValStr.lastIndexOf(",");
+			bookmarkValStr = bookmarkValStr.substring(0, ind);
 		}
 	}
 }

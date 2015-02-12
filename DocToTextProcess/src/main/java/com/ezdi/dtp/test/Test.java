@@ -12,44 +12,53 @@ import com.ezdi.server.common.component.Message;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.ShutdownSignalException;
 
-public class Test {
+public class Test
+{
 
-	private static Message msg;
-	private static String fileName;
-	private static String tenantCode;
-	
-	public static void main(String[] args) throws Exception {
+	private static Message	msg;
+	private static String	fileName;
+	private static String	tenantCode;
+	private static File		textFile;
+
+	public static void main(String[] args) throws Exception
+	{
 		// TODO Auto-generated method stub
-		init();
-		communication();
-		release();
+		Test test = new Test();
+		test.initialize();
+		test.communication();
+		test.release();
 	}
-	
-	private static void init() throws IOException
+
+	private void initialize() throws IOException
 	{
 		// TODO Auto-generated method stub
 		OpenOfficeSetup.startConnection();
 		ProducerConumerSetup.rabbitmqQueueSetup();
-		ProducerConumerSetup.startConsuming(Constant.NLP_QUEUE);
-		
-	}
-	
-	private static void communication() throws ShutdownSignalException, ConsumerCancelledException, IOException, InterruptedException, ClassNotFoundException {
-		// TODO Auto-generated method stub
-		 MessageProcess msgProcessObj=new MessageProcess();
-		 while(true){
-			 msg=msgProcessObj.recieveMessage();
-			 fileName=msg.getFileName();
-			 tenantCode=msg.getTenantCode();
-		     File textFile=FileConversion.convertIntoText(fileName,tenantCode);
-		     fileName=textFile.getName();
-		     msg.setFileName(fileName);
-			 msg.setTenantCode(textFile.getParentFile().getName());
-		     msgProcessObj.sendMessage(msg);
-		 }
+		ProducerConumerSetup.startConsuming(Constant.DOC_TO_TEXT_QUEUE);
+		ProducerConumerSetup.declareQueue(Constant.NLP_QUEUE);
+		ProducerConumerSetup.declareQueue(Constant.DEIDENTIFICATION_QUEUE);
 	}
 
-	private static void release() throws IOException
+	private void communication() throws ShutdownSignalException, ConsumerCancelledException, IOException, InterruptedException, ClassNotFoundException
+	{
+		// TODO Auto-generated method stub
+		MessageProcess msgProcessObj = new MessageProcess();
+		FileConversion fileConversionObj = new FileConversion();
+		while (true)
+		{
+			msg = msgProcessObj.recieveMessage();
+			fileName = msg.getFileName();
+			tenantCode = msg.getTenantCode();
+			fileConversionObj.convertIntoText(fileName, tenantCode);
+			textFile = FileConversion.textFile;
+			fileName = textFile.getName();
+			msg.setFileName(fileName);
+			msg.setTenantCode(textFile.getParentFile().getName());
+			msgProcessObj.sendMessage(msg);
+		}
+	}
+
+	private void release() throws IOException
 	{
 		// TODO Auto-generated method stub
 		OpenOfficeSetup.closeConnection();

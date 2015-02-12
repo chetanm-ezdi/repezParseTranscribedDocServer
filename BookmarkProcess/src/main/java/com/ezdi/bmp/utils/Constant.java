@@ -6,17 +6,15 @@ public class Constant
 	/**
 	 * File Constants.
 	 */
-	public static final String	INPUT_FILES_FOLDER		= "/home/likewise-open/EZDI-DOMAIN/cmoradiya/workspace/ParseTranscribedDocsProject_ Workspace/TranscribedDocParsing/input_folder";
-	public static final String	TXT_FILES_FOLDER		= "/home/likewise-open/EZDI-DOMAIN/cmoradiya/workspace/ParseTranscribedDocsProject_ Workspace/TranscribedDocParsing/text_files_folder";
-	public static final String	DOC_FILES_FOLDER		= "/home/likewise-open/EZDI-DOMAIN/cmoradiya/workspace/ParseTranscribedDocsProject_ Workspace/TranscribedDocParsing/doc_files_folder";
+	public static final String	ROOT					= "";
+	public static final String	DOC_FILES_FOLDER_NAME	= "";
+	public static final String	INPUT_FILES_FOLDER_NAME	= "";
 
 	/**
 	 * File extensions Constants.
 	 */
 
-	public static final String	RTF_FILE_EXTENSION		= "rtf";
 	public static final String	DOC_FILE_EXTENSION		= "doc";
-	public static final String	TXT_FILE_EXTENSION		= "txt";
 
 	/**
 	 * Table Names
@@ -36,11 +34,6 @@ public class Constant
 	 * Rabbitmq Queue Constant
 	 */
 
-	public static final String	DOC_TO_TEXT_QUEUE				= "nlp_queue";
+	public static final String	DOC_TO_TEXT_QUEUE		= "doc_to_text_queue";
 
-	/**
-	 * Other Constant
-	 */
-
-	public static final String	HOSPITAL_ID				= "text_files_folder";
 }

@@ -4,16 +4,22 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.ezdi.dip.utils.Constant;
 
 public class QueryMySql
 {
-	public static Connection	mysqlConnection	= null;
-	public static Statement		stmt			= null;
-	public static Set<String>	demographicInfoSet;
+	private static Connection			mysqlConnection	= null;
+	private static Statement			stmt			= null;
+
+	private static String				query;
+
+	private static ResultSet			resultSet;
+	private static ResultSetMetaData	resultSetMetaData;
+
+	public static Set<String>			bookmarkValSet;
 
 	public QueryMySql() throws Exception
 	{
@@ -21,25 +27,25 @@ public class QueryMySql
 		stmt = mysqlConnection.createStatement();
 	}
 
-	public void getDemographicInfoFromTable(String fileName)
+	public void getBookmarkValueFromTable(String fileName)
 	{
 		// TODO Auto-generated method stub
-		ResultSet resultSet = null;
-		ResultSetMetaData rsmd = null;
-		demographicInfoSet = new HashSet<String>();
+		resultSet = null;
+		resultSetMetaData = null;
+		bookmarkValSet = new LinkedHashSet<String>();
 		try
 		{
-			String query = "select * from " + Constant.BOOKMARK_INFO_TABLE + " where FileName = '" + fileName + "'";
+			query = "select * from " + Constant.BOOKMARK_INFO_TABLE + " where FileName = '" + fileName + "'";
 			resultSet = stmt.executeQuery(query);
 			if (resultSet != null)
 			{
 				while (resultSet.next())
 				{
-					rsmd = resultSet.getMetaData();
-					int columnnumber = rsmd.getColumnCount();
+					resultSetMetaData = resultSet.getMetaData();
+					int columnnumber = resultSetMetaData.getColumnCount();
 					for (int i = 2; i < columnnumber; i++)
 					{
-						demographicInfoSet.add(resultSet.getString(i));
+						bookmarkValSet.add(resultSet.getString(i));
 					}
 				}
 			}

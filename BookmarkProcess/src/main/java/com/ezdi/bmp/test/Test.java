@@ -13,14 +13,14 @@ public class Test
 	public static void main(String[] args) throws Exception
 	{
 		// TODO Auto-generated method stub
-
-		initProcess();
+		Test test = new Test();
+		test.initialize();
 		FileUtils fileUtilObj = new FileUtils();
 		fileUtilObj.getInputFolder();
-		releaseProcess();
+		test.release();
 	}
 
-	private static void initProcess() throws IOException
+	private void initialize() throws IOException
 	{
 		// TODO Auto-generated method stub
 		OpenOfficeSetup.startConnection();
@@ -28,7 +28,7 @@ public class Test
 		ProducerConumerSetup.declareQueue(Constant.DOC_TO_TEXT_QUEUE);
 	}
 
-	private static void releaseProcess() throws IOException
+	private void release() throws IOException
 	{
 		// TODO Auto-generated method stub
 		OpenOfficeSetup.closeConnection();

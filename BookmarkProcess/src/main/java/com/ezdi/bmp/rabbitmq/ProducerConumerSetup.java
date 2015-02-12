@@ -12,10 +12,9 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 public class ProducerConumerSetup
 {
-	public static Connection		connection;
-	public static Channel			channel;
-	public static QueueingConsumer	consumer;
-	public static String			message;
+	private static Connection		connection;
+	private static Channel			channel;
+	private static QueueingConsumer	consumer;
 
 	public static void rabbitmqQueueSetup() throws IOException
 	{
